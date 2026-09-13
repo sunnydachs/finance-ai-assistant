@@ -260,15 +260,34 @@ logged per call to `logs/usage.jsonl`; swapping to paid Claude models is a
    runs on stochastic free-tier models are noisy — see Limitations).
 5. CI job running the eval on a schedule to catch model drift.
 
+## CI & Security
+
+Inherited from the [sunnydachs/repo-template](https://github.com/sunnydachs/repo-template)
+stack (all free tiers), adapted for Python:
+
+- **CI** (`ci.yml`): pytest on Python 3.11 / 3.12 / 3.13. The test suite is
+  fully offline — no API keys are needed to build or test the repo.
+- **CodeQL** (`codeql.yml`): `security-extended` query pack on Python.
+- **gitleaks** (`gitleaks.yml`): secret scanning on every push/PR (plus
+  GitHub-native secret scanning & push protection on the public repo).
+- **Dependabot** (`dependabot.yml`): weekly pip + github-actions updates,
+  grouped minor/patch, with auto-merge for patch/security updates only.
+- **Stale workflow** (`stale.yml`): weekly cleanup of stale issues/PRs.
+
+Agent-facing hard rules (zero secrets in git, no absolute paths, offline
+tests) live in [AGENTS.md](AGENTS.md).
+
 ## Project layout
 
 ```text
 src/        app code (agent, retrieval, guardrails, tool, llm wrapper, config)
 corpus/     faq.jsonl (40 items) + notes/ (own-words guideline summaries)
 evals/      golden.jsonl (30), judge, rule checks, run_eval.py, runs/, reports/
-tests/      offline unit tests (24) — retrieval, guardrails, tool, eval rules
-docs/       raw-vs-RAG comparison notes, demo video script
+tests/      offline unit tests (26) — retrieval, guardrails, tool, eval rules
+docs/       raw-vs-RAG comparison notes, demo script + captures, demo videos
+.github/    CI (pytest matrix), CodeQL, gitleaks, dependabot, stale bot
 DECISIONS.md  design decisions: options → choice → reasons → eval evidence
+AGENTS.md   hard rules for AI agents working in this repo
 ```
 
 ## Demo video

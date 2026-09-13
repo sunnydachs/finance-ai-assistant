@@ -1,11 +1,41 @@
-# Secrets
-.env
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
 
-# Python
-.venv/
+# Build
+dist/
+build/
+out/
+
+# Env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Test
+coverage/
+.nyc_output/
+
+# Python (this repo)
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
 .pytest_cache/
 
-# Logs (regenerable)
+# Logs (regenerable usage/tool-call logs)
 logs/
+
+# Misc
+*.log
+.tmp/
+.cache/
