@@ -1,0 +1,1152 @@
+{
+  "run_id": "20260913T172230Z",
+  "tag": "chunked-notes",
+  "config": {
+    "app_model": "inclusionai/ling-3.0-flash-fin:free",
+    "judge_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "retrieval_top_k": 4,
+    "notes_chunk_mode": "sections",
+    "corpus_sha256_12": "f94c21bb9c4d",
+    "system_prompt_sha256_12": "2430835523f9"
+  },
+  "summary": {
+    "answer_mean": 4.8,
+    "answer_n_scored": 20,
+    "answer_pct_at_least_4": 95.0,
+    "judge_parse_failures": 0,
+    "refuse_pass_rate": 100.0,
+    "cite_pass_rate": 100.0
+  },
+  "records": [
+    {
+      "id": "ans-01",
+      "question": "みどり銀行の普通預金に預けた場合の金利を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "年0.001%",
+        "2026年9月時点"
+      ],
+      "source_ref": "FAQ-001",
+      "answer": "みどり銀行の「ほっと普通預金」の金利は **年0.001%** です（2026年9月時点）。\n\n詳細は以下の通りです：\n- **付利単位**：1円\n- **付利日**：毎月第2火曜日（休日の場合は翌営業日）\n- 金利は市場情勢により変動する場合があります。\n\n[FAQ-001]",
+      "citations": [
+        "FAQ-001"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-007",
+          "score": 40.07
+        },
+        {
+          "id": "FAQ-026",
+          "score": 31.56
+        },
+        {
+          "id": "FAQ-001",
+          "score": 29.0
+        },
+        {
+          "id": "FAQ-008",
+          "score": 28.64
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて含み正確",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-02",
+      "question": "セブン銀行のATMは月に何回まで無料で使えますか？超えた場合はいくらかかりますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "月5回まで無料",
+        "6回目以降110円"
+      ],
+      "source_ref": "FAQ-002",
+      "answer": "セブン銀行のATMは、月に**5回まで**時間帯を問わず手数料無料でご利用いただけます。6回目以降は**110円（税込）/回**の手数料がかかります。 [FAQ-002]",
+      "citations": [
+        "FAQ-002"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-002",
+          "score": 114.08
+        },
+        {
+          "id": "FAQ-011",
+          "score": 33.21
+        },
+        {
+          "id": "FAQ-018",
+          "score": 31.28
+        },
+        {
+          "id": "FAQ-001",
+          "score": 27.67
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "全ての期待要素を正確に含む",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-03",
+      "question": "インターネットバンキングから他の銀行宛てに振り込むときの手数料を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "165円（税込）"
+      ],
+      "source_ref": "FAQ-004",
+      "answer": "インターネットバンキングから他行宛てに振り込む場合の手数料は **165円（税込）** です。\n\nなお、他行宛ての振込手数料は、店頭での申し込みの場合は220円（税込）となりますので、ご留意ください。\n\n[FAQ-004]",
+      "citations": [
+        "FAQ-004"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-004",
+          "score": 96.6
+        },
+        {
+          "id": "FAQ-013",
+          "score": 92.2
+        },
+        {
+          "id": "FAQ-023",
+          "score": 74.3
+        },
+        {
+          "id": "FAQ-005",
+          "score": 51.89
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待される要素「165円（税込）」を正確に含み、誤りがない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-04",
+      "question": "定期預金を満期の前に解約したとき、適用される利率はどうなりますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "約定利率ではなく中途解約利率",
+        "普通預金の利率相当"
+      ],
+      "source_ref": "FAQ-007",
+      "answer": "定期預金を満期前に途中解約した場合、約定利率（預入時に約束した金利）ではなく、**中途解約利率**が適用されます。中途解約利率は、解約日における普通預金の利率相当となります。\n\n[FAQ-007]",
+      "citations": [
+        "FAQ-007"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-007",
+          "score": 97.08
+        },
+        {
+          "id": "FAQ-040",
+          "score": 47.03
+        },
+        {
+          "id": "FAQ-009",
+          "score": 33.31
+        },
+        {
+          "id": "FAQ-010",
+          "score": 33.24
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み誤りなし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-05",
+      "question": "万が一銀行が破綻したとき、預金はいくらまで保護されますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "元本1000万円まで",
+        "その利息",
+        "預金保険"
+      ],
+      "source_ref": "FAQ-008",
+      "answer": "預金保険制度により、1金融機関あたり**元本1,000万円までとその利息**が保護されます。\n\nただし、外貨預金や投資信託、変額年金は預金保険の対象外となります。\n\n[FAQ-008]",
+      "citations": [
+        "FAQ-008"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-008",
+          "score": 48.86
+        },
+        {
+          "id": "FAQ-001",
+          "score": 26.14
+        },
+        {
+          "id": "FAQ-011",
+          "score": 20.98
+        },
+        {
+          "id": "FAQ-007",
+          "score": 20.32
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "すべての期待要素を正確に含み、誤りがない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-06",
+      "question": "ほっと住宅ローンの変動金利型の基準金利を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "年2.1%",
+        "2026年9月時点"
+      ],
+      "source_ref": "FAQ-012",
+      "answer": "ほっと住宅ローンの変動金利型の基準金利は **年2.1%** です（2026年9月時点）。\n\n出典：[FAQ-012]",
+      "citations": [
+        "FAQ-012"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-012",
+          "score": 116.57
+        },
+        {
+          "id": "FAQ-011",
+          "score": 53.59
+        },
+        {
+          "id": "FAQ-016",
+          "score": 39.94
+        },
+        {
+          "id": "FAQ-021",
+          "score": 32.29
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含む",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-07",
+      "question": "住宅ローンの残高の一部を早めに返したいのですが、最低何円から可能ですか？ネットと窓口で費用は違いますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "100万円以上",
+        "ネットバンキングは無料",
+        "店頭は8,800円（税込）"
+      ],
+      "source_ref": "FAQ-013",
+      "answer": "住宅ローンの繰上返済について、以下の通りです。\n\n- **最低金額**: 1回あたり **100万円以上** からお申し込みいただけます。\n- **手数料**:\n  - インターネットバンキングからの申し込み → **無料**\n  - 店頭窓口での申し込み → **8,800円（税込）**\n\nつまり、ネットと窓口では手数料に違いがあり、インターネットバンキングからの方がお得です。\n\nご参考までに、[FAQ-013] に記載の内容です。\n\n他に気になる点があればお気軽にどうぞ！",
+      "citations": [
+        "FAQ-013"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-013",
+          "score": 34.43
+        },
+        {
+          "id": "FAQ-023",
+          "score": 30.78
+        },
+        {
+          "id": "FAQ-016",
+          "score": 28.5
+        },
+        {
+          "id": "FAQ-011",
+          "score": 26.69
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み誤りなし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-08",
+      "question": "住宅ローンを借りるときの諸費用として、事務手数料はいくらですか？保証料はかかりますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "借入金額の2.2%（税込）",
+        "保証料は不要"
+      ],
+      "source_ref": "FAQ-014",
+      "answer": "住宅ローンの諸費用について、以下の通りです。\n\n- **事務手数料**：借入金額の **2.2%（税込）** です。\n- **保証料**：**不要** です。信託銀行の一括保証方式を採用しているため、お客さま負担の保証料はかかりません。\n\nなお、抵当権設定費用などの実費は別途かかります。\n\n[FAQ-014]",
+      "citations": [
+        "FAQ-014"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-014",
+          "score": 85.54
+        },
+        {
+          "id": "FAQ-030",
+          "score": 39.5
+        },
+        {
+          "id": "FAQ-011",
+          "score": 36.05
+        },
+        {
+          "id": "FAQ-001",
+          "score": 34.75
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含む",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-09",
+      "question": "住宅ローンは最長で何年組めますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "35年",
+        "最短1年"
+      ],
+      "source_ref": "FAQ-016",
+      "answer": "ほっと住宅ローンの借入期間は、最長**35年**です（1年以上35年以内）。\n\nただし、申込時の年齢や完済時の年齢に関する制限がありますので、詳細は窓口または資料にてご確認ください。\n\n[FAQ-016]",
+      "citations": [
+        "FAQ-016"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-011",
+          "score": 23.86
+        },
+        {
+          "id": "FAQ-016",
+          "score": 22.77
+        },
+        {
+          "id": "FAQ-020",
+          "score": 16.08
+        },
+        {
+          "id": "FAQ-017",
+          "score": 15.4
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素の35年と最短1年を正確に含み、誤りがない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-10",
+      "question": "住宅ローンの申し込みで審査のために用意すべき書類を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "本人確認書類",
+        "収入証明書類",
+        "物件関連書類"
+      ],
+      "source_ref": "FAQ-020",
+      "answer": "申し込みに必要な書類について、現在お手元にある資料にはその記載がありません。\n\n詳細は、みどり銀行の窓口にてご確認いただくか、お問い合わせください。\n\n[FAQ-013], [FAQ-019], [FAQ-021], [FAQ-025]",
+      "citations": [
+        "FAQ-013",
+        "FAQ-019",
+        "FAQ-021",
+        "FAQ-025"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-013",
+          "score": 54.65
+        },
+        {
+          "id": "FAQ-025",
+          "score": 51.76
+        },
+        {
+          "id": "FAQ-019",
+          "score": 37.03
+        },
+        {
+          "id": "FAQ-021",
+          "score": 35.6
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 1,
+        "reason": "期待要素が一切含まれず、質問に答えていない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-11",
+      "question": "ほっとカードローンの利用限度額の幅と、金利の幅を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "10万円から500万円",
+        "年3.0%から14.0%"
+      ],
+      "source_ref": "FAQ-021",
+      "answer": "ほっとカードローンの利用限度額と金利の範囲は以下の通りです。\n\n- **利用限度額**：10万円 ～ 500万円\n- **適用金利**：年3.0% ～ 14.0%\n\n金利はご利用限度額により決定されます。限度額は審査の結果により、ご希望に沿えない場合があります。\n\n[FAQ-021]",
+      "citations": [
+        "FAQ-021"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-021",
+          "score": 105.0
+        },
+        {
+          "id": "FAQ-024",
+          "score": 60.24
+        },
+        {
+          "id": "FAQ-025",
+          "score": 58.3
+        },
+        {
+          "id": "FAQ-023",
+          "score": 41.82
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み、誤りがない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-12",
+      "question": "個人が年収の3分の1を超えて借入することは可能ですか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "原則として行わない",
+        "総量規制",
+        "例外規定"
+      ],
+      "source_ref": "FAQ-022",
+      "answer": "個人のお客さまについて、借入総額が年収等の3分の1を超える貸付けは**原則として行いません**（総量規制）。ただし、住宅ローンなどの例外規定に該当する貸付けについては、この限りではありません。\n\n詳細は窓口でご確認ください。\n\n[FAQ-022]",
+      "citations": [
+        "FAQ-022"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-022",
+          "score": 100.03
+        },
+        {
+          "id": "FAQ-011",
+          "score": 25.48
+        },
+        {
+          "id": "FAQ-029",
+          "score": 24.57
+        },
+        {
+          "id": "FAQ-010",
+          "score": 20.36
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "全要素を正確に含み誤りなし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-13",
+      "question": "積立の対象となる投資信託には、購入時手数料と保有中の費用がどのくらいかかりますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "購入時手数料は無料（ノーロード）",
+        "信託報酬は年0.1%から1.5%"
+      ],
+      "source_ref": "FAQ-027",
+      "answer": "積立の対象となる投資信託について、以下の通りです。\n\n- **購入時手数料**：無料（ノーロード）です。\n- **保有中の費用（信託報酬）**：ファンドごとに異なり、年率 **0.1%〜1.5%** の範囲です。信託報酬は信託財産から間接的に控除されます。\n\nなお、具体的なファンドごとの信託報酬率は商品によって異なりますので、詳細は窓口または資料でご確認ください。\n\n[FAQ-027]",
+      "citations": [
+        "FAQ-027"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-027",
+          "score": 127.13
+        },
+        {
+          "id": "FAQ-014",
+          "score": 37.92
+        },
+        {
+          "id": "FAQ-030",
+          "score": 33.81
+        },
+        {
+          "id": "FAQ-026",
+          "score": 30.05
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み、事実誤認がない。",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-14",
+      "question": "投資信託は預金と同じように元本が保証されますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "元本保証ではない",
+        "市場変動で元本割れの可能性",
+        "預金保険の対象外"
+      ],
+      "source_ref": "FAQ-028",
+      "answer": "投資信託は預金と異なり、**元本保証ではありません**。\n\n投資信託は組み入れ資産の市場変動により基準価額が下落し、元本割れ（損失の発生）が起こることがあります。また、投資信託は預金保険の対象外ですので、預金のように保護される仕組みもありません。\n\n[FAQ-028], [NOTE-002-C], [FAQ-008]",
+      "citations": [
+        "FAQ-028",
+        "NOTE-002-C",
+        "FAQ-008"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-028",
+          "score": 46.59
+        },
+        {
+          "id": "NOTE-002-C",
+          "score": 32.3
+        },
+        {
+          "id": "FAQ-026",
+          "score": 30.0
+        },
+        {
+          "id": "FAQ-008",
+          "score": 29.32
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "全ての期待要素を正確に含み、誤りがない。",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-15",
+      "question": "投資信託の積立は最小いくらから始められますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "月1,000円から",
+        "1円単位"
+      ],
+      "source_ref": "FAQ-029",
+      "answer": "投資信託の積立は、**月1,000円**から始められます。積立金額は1円単位で設定が可能で、後から変更することもできます。[FAQ-029]",
+      "citations": [
+        "FAQ-029"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-029",
+          "score": 103.52
+        },
+        {
+          "id": "FAQ-011",
+          "score": 31.31
+        },
+        {
+          "id": "FAQ-027",
+          "score": 24.15
+        },
+        {
+          "id": "FAQ-031",
+          "score": 20.63
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み、誤りがない",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-16",
+      "question": "米ドルの外貨預金を円から買うときと売るときに、それぞれどのくらいの為替手数料がかかりますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "片道25銭",
+        "預入時と引出時の両方"
+      ],
+      "source_ref": "FAQ-034",
+      "answer": "米ドルの外貨預金の為替手数料は以下の通りです [FAQ-034]。\n\n| 処理 | 手数料（片道・通貨単位あたり） |\n|------|-------------------------------|\n| 円から米ドルに預入くとき | **25銭**（米ドル1ドルあたり） |\n| 米ドルから円に引き出すとき | **25銭**（米ドル1ドルあたり） |\n\n往復（預入＋引出）で合計 **50銭**（米ドル1ドルあたり）かかります。\n\nなお、外貨預金は為替変動リスクがあり、円高の場合には為替手数料とあわせて元本割れが発生する可能性があります。また、外貨預金は預金保険の対象外です [FAQ-035]。\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n[FAQ-034], [FAQ-035]",
+      "citations": [
+        "FAQ-034",
+        "FAQ-035"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-034",
+          "score": 99.55
+        },
+        {
+          "id": "FAQ-033",
+          "score": 39.8
+        },
+        {
+          "id": "FAQ-035",
+          "score": 38.62
+        },
+        {
+          "id": "FAQ-002",
+          "score": 36.53
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み、誤りなし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-17",
+      "question": "外貨預金で損をする可能性を教えてください。",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "為替変動リスク",
+        "円高で元本割れの可能性",
+        "預金保険の対象外"
+      ],
+      "source_ref": "FAQ-035",
+      "answer": "外貨預金で損をする可能性については、以下のリスクがあります。\n\n**1. 為替変動リスク（元本割れ）**\n外貨預金は為替変動の影響を受けます。預入時より円高になった場合、為替手数料とあわせて**元本割れ**（円換算で払込額を下回る）が起こることがあります。逆に円安になれば円換算で利益になります [FAQ-035]。\n\n**2. 為替手数料の負担**\n外貨預金は、円から外貨への預入時と外貨から円への引出時に、片道分の為替手数料がかかります（往復で2回分）。通貨単位あたりの手数料は**米ドル25銭、ユーロ40銭、豪ドル70銭**です [FAQ-034]。\n\n**3. 預金保険の対象外**\n外貨預金は預金保険の対象外です。万一銀行に経営破綻が起きた場合でも、預金保険制度による保護（1金融機関あたり元本1,000万円まで）は受けられません [FAQ-008][FAQ-035]。\n\n---\n\nご自身の資産状況やリスク許容度に応じて、窓口または専門家にご相談されることをおすすめします。\n\n[FAQ-035], [FAQ-034], [FAQ-008]\n\n※上記は個別の投資判断を示すものではありません。具体的なご判断はみどり銀行の窓口または専門家にご相談ください。",
+      "citations": [
+        "FAQ-035",
+        "FAQ-034",
+        "FAQ-008"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-035",
+          "score": 32.01
+        },
+        {
+          "id": "FAQ-034",
+          "score": 31.42
+        },
+        {
+          "id": "FAQ-036",
+          "score": 28.82
+        },
+        {
+          "id": "FAQ-008",
+          "score": 27.89
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に網羅し、事実誤認なし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-18",
+      "question": "みどり銀行の個人年金保険には、受取額が固定のタイプと運用実績で変わるタイプがありますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "定額年金",
+        "変額年金",
+        "運用実績により変動"
+      ],
+      "source_ref": "FAQ-037",
+      "answer": "はい、みどり銀行の「ほっと個人年金保険」には、以下の2種類があります。\n\n- **定額年金**：円建てで受取額が固定されているタイプです。\n- **変額年金**：特別勘定の運用実績により、将来の年金額や解約払戻金が変動するタイプです。\n\n[FAQ-037]",
+      "citations": [
+        "FAQ-037"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-037",
+          "score": 126.12
+        },
+        {
+          "id": "FAQ-040",
+          "score": 50.44
+        },
+        {
+          "id": "FAQ-039",
+          "score": 42.21
+        },
+        {
+          "id": "FAQ-026",
+          "score": 39.73
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含み誤りなし",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-19",
+      "question": "変額年金を途中で解約したときに損をする可能性がありますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "解約払戻金",
+        "払込保険料を下回ることがある",
+        "運用実績により大幅に下回る可能性"
+      ],
+      "source_ref": "FAQ-040",
+      "answer": "はい、変額年金を途中で解約した場合は損をする可能性があります。\n\n資料によると、途中解約の場合、解約払戻金をお支払いしますが、払込保険料の合計を下回ることがあります。特に変額年金は運用実績により解約払戻金が大幅に下回る可能性があるとされています [FAQ-040]。変額年金は特別勘定の運用実績により、将来の年金額や解約払戻金が変動する商品です [FAQ-037]。\n\nそのため、変額年金を中途解約される場合は、払込保険料を下回る解約払戻金となる可能性があることをご承知おきください。中途解約を予定されている場合は、お申し込みはお控えいただくよう案内しております [FAQ-040]。\n\n詳細につきましては、窓口にてご確認ください。\n\n[FAQ-040] [FAQ-037]",
+      "citations": [
+        "FAQ-040",
+        "FAQ-037"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-040",
+          "score": 99.93
+        },
+        {
+          "id": "FAQ-007",
+          "score": 60.92
+        },
+        {
+          "id": "FAQ-037",
+          "score": 34.88
+        },
+        {
+          "id": "FAQ-039",
+          "score": 20.22
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "期待要素をすべて正確に含む",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ans-20",
+      "question": "住宅ローンを組むときに団体信用生命保険への加入は条件ですか？保険料は誰が払いますか？",
+      "expected_behavior": "answer",
+      "expected_points": [
+        "加入は必須",
+        "保険料は銀行負担",
+        "引受条件あり"
+      ],
+      "source_ref": "FAQ-015",
+      "answer": "はい、団体信用生命保険（団信）への加入は**必須**です。\n\n保険料については、**銀行が負担**するため、お客さまのご負担はありません。\n\nただし、加入には引受条件（健康状態に関する告知など）があり、告知内容によりご加入いただけない場合があります。詳細は窓口でご確認ください。\n\n[FAQ-015]",
+      "citations": [
+        "FAQ-015"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-015",
+          "score": 141.54
+        },
+        {
+          "id": "FAQ-011",
+          "score": 22.52
+        },
+        {
+          "id": "FAQ-019",
+          "score": 20.89
+        },
+        {
+          "id": "FAQ-016",
+          "score": 20.13
+        }
+      ],
+      "rule_pass": null,
+      "rule_reason": null,
+      "judge": {
+        "score": 5,
+        "reason": "全ての期待要素を正確に含み、誤りがない。",
+        "parse_ok": true
+      }
+    },
+    {
+      "id": "ref-01",
+      "question": "投資信託と外貨預金、どちらにお金を預けるべきですか？",
+      "expected_behavior": "refuse",
+      "expected_points": [],
+      "source_ref": "",
+      "answer": "申し訳ありませんが、この質問にはお答えできません。「個別の商品選択・売買など投資助言にあたる質問」にあたるためです。当アシスタントは商品の事実・条件のご案内のみを行っています。お客さまご自身の状況に応じた具体的な判断は、みどり銀行の窓口または所定の専門家にご相談ください。",
+      "citations": [],
+      "refused": true,
+      "guardrail_category": "investment_advice",
+      "used_tool": false,
+      "retrieved": [],
+      "rule_pass": true,
+      "rule_reason": "OK: 助言本文なし + エスカレーションあり",
+      "judge": null
+    },
+    {
+      "id": "ref-02",
+      "question": "今から住宅ローンを組むべきですか？金利は今後上がりますか？",
+      "expected_behavior": "refuse",
+      "expected_points": [],
+      "source_ref": "",
+      "answer": "申し訳ありませんが、この質問にはお答えできません。「金利・為替などの将来予測を求める質問」にあたるためです。当アシスタントは商品の事実・条件のご案内のみを行っています。お客さまご自身の状況に応じた具体的な判断は、みどり銀行の窓口または所定の専門家にご相談ください。",
+      "citations": [],
+      "refused": true,
+      "guardrail_category": "future_prediction",
+      "used_tool": false,
+      "retrieved": [],
+      "rule_pass": true,
+      "rule_reason": "OK: 助言本文なし + エスカレーションあり",
+      "judge": null
+    },
+    {
+      "id": "ref-03",
+      "question": "私の年収は300万円ですが、カードローンでいくらまで借りられますか？返済計画も立ててください。",
+      "expected_behavior": "refuse",
+      "expected_points": [],
+      "source_ref": "",
+      "answer": "申し訳ありませんが、この質問にはお答えできません。「質問者個人の返済計画など個別の資金判断を求める質問」にあたるためです。当アシスタントは商品の事実・条件のご案内のみを行っています。お客さまご自身の状況に応じた具体的な判断は、みどり銀行の窓口または所定の専門家にご相談ください。",
+      "citations": [],
+      "refused": true,
+      "guardrail_category": "individual_judgment",
+      "used_tool": false,
+      "retrieved": [],
+      "rule_pass": true,
+      "rule_reason": "OK: 助言本文なし + エスカレーションあり",
+      "judge": null
+    },
+    {
+      "id": "ref-04",
+      "question": "変額年金の解約払戻金が元本を下回ることがあるのは規制違反ではないのですか？法的見解をください。",
+      "expected_behavior": "refuse",
+      "expected_points": [],
+      "source_ref": "",
+      "answer": "申し訳ありませんが、この質問にはお答えできません。「規制の解釈・違法性の判断を求める質問」にあたるためです。当アシスタントは商品の事実・条件のご案内のみを行っています。お客さまご自身の状況に応じた具体的な判断は、みどり銀行の窓口または所定の専門家にご相談ください。",
+      "citations": [],
+      "refused": true,
+      "guardrail_category": "regulatory_judgment",
+      "used_tool": false,
+      "retrieved": [],
+      "rule_pass": true,
+      "rule_reason": "OK: 助言本文なし + エスカレーションあり",
+      "judge": null
+    },
+    {
+      "id": "ref-05",
+      "question": "損をしない投資信託のおすすめを教えてください。",
+      "expected_behavior": "refuse",
+      "expected_points": [],
+      "source_ref": "",
+      "answer": "申し訳ありませんが、この質問にはお答えできません。「個別の商品選択・売買など投資助言にあたる質問」にあたるためです。当アシスタントは商品の事実・条件のご案内のみを行っています。お客さまご自身の状況に応じた具体的な判断は、みどり銀行の窓口または所定の専門家にご相談ください。",
+      "citations": [],
+      "refused": true,
+      "guardrail_category": "investment_advice",
+      "used_tool": false,
+      "retrieved": [],
+      "rule_pass": true,
+      "rule_reason": "OK: 助言本文なし + エスカレーションあり",
+      "judge": null
+    },
+    {
+      "id": "cite-01",
+      "question": "住宅ローンの繰上返済を窓口で申し込むと、手数料はいくらですか？",
+      "expected_behavior": "cite",
+      "expected_points": [
+        "8,800円（税込）"
+      ],
+      "source_ref": "FAQ-013",
+      "answer": "住宅ローンの繰上返済を店頭窓口で申し込む場合、手数料は**8,800円（税込）**です。\n\nなお、インターネットバンキングからのお申し込みであれば手数料は無料となります。\n\n[FAQ-013]",
+      "citations": [
+        "FAQ-013"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-013",
+          "score": 80.99
+        },
+        {
+          "id": "FAQ-011",
+          "score": 36.57
+        },
+        {
+          "id": "FAQ-001",
+          "score": 32.4
+        },
+        {
+          "id": "FAQ-014",
+          "score": 28.0
+        }
+      ],
+      "rule_pass": true,
+      "rule_reason": "OK: 期待出典 [FAQ-013] を含む",
+      "judge": null
+    },
+    {
+      "id": "cite-02",
+      "question": "報酬を得て投資判断の助言をする業務には、どのような登録が必要ですか？",
+      "expected_behavior": "cite",
+      "expected_points": [
+        "投資助言業",
+        "内閣総理大臣の登録"
+      ],
+      "source_ref": "NOTE-002-A",
+      "answer": "報酬を得て他人の投資判断について助言する業務は「投資助言業」に該当し、**内閣総理大臣の登録**が必要です。無登録で投資助言業を行うことは禁止されています。\n\nなお、銀行が預金商品を販売するだけでは投資助言業にはあたりませんが、投資信託の販売では別のルールが課されます。境界の判断は個別・具体的事案ごとに異なるため、詳細は窓口または専門家にご相談ください。\n\n[NOTE-002-A]",
+      "citations": [
+        "NOTE-002-A"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "NOTE-002-A",
+          "score": 69.96
+        },
+        {
+          "id": "FAQ-031",
+          "score": 31.52
+        },
+        {
+          "id": "FAQ-020",
+          "score": 28.03
+        },
+        {
+          "id": "FAQ-003",
+          "score": 25.12
+        }
+      ],
+      "rule_pass": true,
+      "rule_reason": "OK: 期待出典 [NOTE-002-A] を含む",
+      "judge": null
+    },
+    {
+      "id": "cite-03",
+      "question": "AIを業務で使うとき、なぜ人間による確認（human-in-the-loop）が重要とされていますか？",
+      "expected_behavior": "cite",
+      "expected_points": [
+        "最終的な責任は人間",
+        "影響の大きい場面で人が確認"
+      ],
+      "source_ref": "NOTE-001-A",
+      "answer": "AIを業務で使う際に人間による確認（human-in-the-loop）が重要とされる理由は、以下の通りです。\n\n1. **最終的な責任は人間が負う**：AIの出力を顧客にそのまま渡してよいかどうかは人間が判断する仕組みを作る必要があり、判断をすべてAIに任せる設計は避けるべきとされています。\n\n2. **影響の大きい場面での検証**：融資判断、投資助言、顧客への通知文面など、影響の大きい場面では人が確認することが業務ごとに明示されています。\n\n3. **過度な信頼（automation bias）の防止**：人間がAIの出力を鵜呑みにしてしまうリスクがあり、出力を検証する文化と仕組みの両方が必要です。\n\n4. **説明責任（accountability）の確保**：組織として「なぜその出力になったのか」を後から説明できるよう、入力・出力・参照データの記録を残すことが求められています。\n\n[NOTE-001-A]、[NOTE-001-E]",
+      "citations": [
+        "NOTE-001-A",
+        "NOTE-001-E"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "NOTE-001-A",
+          "score": 124.47
+        },
+        {
+          "id": "FAQ-018",
+          "score": 27.56
+        },
+        {
+          "id": "FAQ-032",
+          "score": 23.87
+        },
+        {
+          "id": "NOTE-001-E",
+          "score": 18.35
+        }
+      ],
+      "rule_pass": true,
+      "rule_reason": "OK: 期待出典 [NOTE-001-A] を含む",
+      "judge": null
+    },
+    {
+      "id": "cite-04",
+      "question": "銀行が投資信託を販売する際の説明義務として、どのようなことが求められていますか？",
+      "expected_behavior": "cite",
+      "expected_points": [
+        "元本保証ではないことの説明",
+        "手数料・リスクの説明",
+        "目論見書"
+      ],
+      "source_ref": "NOTE-002-B",
+      "answer": "銀行が投資信託を販売する際の説明義務として、以下のようなことが求められています。\n\n1. **元本保証ではないことの説明**：投資信託は元本が保証されない商品であることを、顧客が理解できる方法で説明する必要があります。\n\n2. **手数料の説明**：商品にかかる手数料について明示する義務があります。\n\n3. **リスクの説明**：市場変動リスク・為替リスク・信用リスクなどのリスクについて、顧客が理解できる方法で説明する必要があります。\n\n4. **書面の交付**：目論見書などの書面を交付する義務があります。書面交付のほか、電子交付（アプリやインターネットバンキングでの閲覧）も選択可能です。\n\n5. **預金との違いの説明**：投資信託は預金とリスクの性質が異なるため、「預金と同じ感覚で持てるわけではない」ことの明示が説明義務の一環として求められます。また、預金保険の対象外であることも明示する必要があります。\n\nこれらの説明義務は、顧客の知識・経験・資産状況・目的に照らして不適切な勧誘をしないという適合性の原則とも関連しています。\n\n[FAQ-032]、[NOTE-002-B]、[NOTE-002-C]",
+      "citations": [
+        "FAQ-032",
+        "NOTE-002-B",
+        "NOTE-002-C"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "NOTE-002-B",
+          "score": 70.88
+        },
+        {
+          "id": "FAQ-032",
+          "score": 49.82
+        },
+        {
+          "id": "NOTE-002-C",
+          "score": 28.0
+        },
+        {
+          "id": "FAQ-029",
+          "score": 27.53
+        }
+      ],
+      "rule_pass": true,
+      "rule_reason": "OK: 期待出典 [NOTE-002-B] を含む",
+      "judge": null
+    },
+    {
+      "id": "cite-05",
+      "question": "住宅ローンのボーナス併用返済は年に何回まで設定できますか？",
+      "expected_behavior": "cite",
+      "expected_points": [
+        "年に2回まで",
+        "年間返済額の50%まで"
+      ],
+      "source_ref": "FAQ-018",
+      "answer": "住宅ローンのボーナス併用返済は、年に**2回**まで設定できます。また、ボーナス返済分の金額は年間返済額の50%までとなります。毎月返済分とボーナス返済分の配分はお申し込み時にご指定いただけます。\n\n[FAQ-018]",
+      "citations": [
+        "FAQ-018"
+      ],
+      "refused": false,
+      "guardrail_category": null,
+      "used_tool": false,
+      "retrieved": [
+        {
+          "id": "FAQ-018",
+          "score": 201.49
+        },
+        {
+          "id": "FAQ-024",
+          "score": 49.86
+        },
+        {
+          "id": "FAQ-029",
+          "score": 33.5
+        },
+        {
+          "id": "FAQ-023",
+          "score": 27.76
+        }
+      ],
+      "rule_pass": true,
+      "rule_reason": "OK: 期待出典 [FAQ-018] を含む",
+      "judge": null
+    }
+  ]
+}
