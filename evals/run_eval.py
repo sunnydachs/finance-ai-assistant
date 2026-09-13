@@ -45,6 +45,8 @@ def corpus_fingerprint() -> str:
 
 
 def config_snapshot() -> dict:
+    from src.retrieval import BM25Index  # for the default question weight
+
     return {
         "app_model": config.APP_MODEL,
         "judge_model": config.JUDGE_MODEL,
