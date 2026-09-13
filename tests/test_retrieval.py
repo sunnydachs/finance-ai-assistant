@@ -55,9 +55,33 @@ def test_retrieval_top1_accuracy_over_faq_questions():
     assert not misses, f"retrieval misses: {misses}"
 
 
+def test_boilerplate_does_not_bias_toward_question_shaped_docs():
+    """Regression: the eval suite caught this failure (ans-10, see DECISIONS.md).
+
+    「用意すべき書類」 must retrieve the 審査書類 FAQ even though other FAQ
+    questions share boilerplate like 教えてください/申し込み with the query.
+    Before boilerplate stripping, FAQ-020 ranked 10th and the app answered
+    'not in corpus'.
+    """
+    index = make_index()
+    hits = index.search("住宅ローンの申し込みで審査のために用意すべき書類を教えてください。", k=4)
+    ids = [doc.display_id() for doc, _ in hits]
+    assert "FAQ-020" in ids
+
+
+def test_tokenize_strips_politeness_boilerplate():
+    assert "教えて" not in tokenize("教えてください") or "ください" not in tokenize("教えてください")
+    # topical content survives, politeness does not
+    assert "書類" in tokenize("必要な書類を教えてください")
+    assert "くださ" not in tokenize("必要な書類を教えてください")
+
+
 def test_search_filters_zero_score_hits():
-    """Docs with no token overlap (score 0) must not be returned."""
+    """Docs with no token overlap (score 0) must not be returned.
+
+    After boilerplate stripping, polite form suffixes no longer create
+    incidental です/ます ngram overlap between unrelated texts.
+    """
     index = BM25Index([Doc(id="FAQ-999", title="t", text="全く関係ない内容です", kind="faq")])
-    assert index.search("xyzzy plugh", k=1) == []  # ASCII tokens absent from doc
-    hits = index.search("宇宙船の燃料は何ですか", k=1)  # only incidental ngram overlap
-    assert hits and hits[0][1] < 1.0  # incidental overlap scores near zero
+    assert index.search("xyzzy plugh", k=1) == []
+    assert index.search("宇宙船の燃料は何ですか", k=1) == []
