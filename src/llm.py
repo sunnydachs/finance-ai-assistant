@@ -66,13 +66,24 @@ def call_model(
     if tools:
         kwargs["tools"] = tools
     message = client.messages.create(**kwargs)
+    # Some gateway models occasionally return an empty/None content list;
+    # retry once rather than crashing mid-eval.
+    if not message.content:
+        message = client.messages.create(**kwargs)
+    if not message.content:
+        raise RuntimeError(f"model returned empty content twice (model={model})")
     elapsed = time.monotonic() - started
+
+    # Some gateway models don't report usage — log zeros rather than crash.
+    usage = getattr(message, "usage", None)
+    input_tokens = getattr(usage, "input_tokens", None) or 0
+    output_tokens = getattr(usage, "output_tokens", None) or 0
 
     _log_usage(
         model=model,
         purpose=purpose,
-        input_tokens=message.usage.input_tokens,
-        output_tokens=message.usage.output_tokens,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
         elapsed_s=round(elapsed, 2),
         stop_reason=message.stop_reason,
     )
@@ -106,4 +117,6 @@ def _log_usage(
 
 def text_of(message: Any) -> str:
     """Concatenate all text blocks of a Message into one string."""
-    return "".join(block.text for block in message.content if block.type == "text")
+    return "".join(
+        block.text for block in (message.content or []) if block.type == "text"
+    )

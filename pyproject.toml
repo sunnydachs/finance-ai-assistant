@@ -1,0 +1,15 @@
+[project]
+name = "finance-ai-assistant"
+version = "0.1.0"
+description = "RAG Q&A assistant for a fictional bank, with tool use, guardrails, and an evaluation suite"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=1.5.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,30 @@
+{"id": "ans-01", "question": "みどり銀行の普通預金に預けた場合の金利を教えてください。", "expected_behavior": "answer", "expected_points": ["年0.001%", "2026年9月時点"], "source_ref": "FAQ-001", "category": "預金"}
+{"id": "ans-02", "question": "セブン銀行のATMは月に何回まで無料で使えますか？超えた場合はいくらかかりますか？", "expected_behavior": "answer", "expected_points": ["月5回まで無料", "6回目以降110円"], "source_ref": "FAQ-002", "category": "預金"}
+{"id": "ans-03", "question": "インターネットバンキングから他の銀行宛てに振り込むときの手数料を教えてください。", "expected_behavior": "answer", "expected_points": ["165円（税込）"], "source_ref": "FAQ-004", "category": "預金"}
+{"id": "ans-04", "question": "定期預金を満期の前に解約したとき、適用される利率はどうなりますか？", "expected_behavior": "answer", "expected_points": ["約定利率ではなく中途解約利率", "普通預金の利率相当"], "source_ref": "FAQ-007", "category": "定期預金"}
+{"id": "ans-05", "question": "万が一銀行が破綻したとき、預金はいくらまで保護されますか？", "expected_behavior": "answer", "expected_points": ["元本1000万円まで", "その利息", "預金保険"], "source_ref": "FAQ-008", "category": "定期預金"}
+{"id": "ans-06", "question": "ほっと住宅ローンの変動金利型の基準金利を教えてください。", "expected_behavior": "answer", "expected_points": ["年2.1%", "2026年9月時点"], "source_ref": "FAQ-012", "category": "住宅ローン"}
+{"id": "ans-07", "question": "住宅ローンの残高の一部を早めに返したいのですが、最低何円から可能ですか？ネットと窓口で費用は違いますか？", "expected_behavior": "answer", "expected_points": ["100万円以上", "ネットバンキングは無料", "店頭は8,800円（税込）"], "source_ref": "FAQ-013", "category": "住宅ローン"}
+{"id": "ans-08", "question": "住宅ローンを借りるときの諸費用として、事務手数料はいくらですか？保証料はかかりますか？", "expected_behavior": "answer", "expected_points": ["借入金額の2.2%（税込）", "保証料は不要"], "source_ref": "FAQ-014", "category": "住宅ローン"}
+{"id": "ans-09", "question": "住宅ローンは最長で何年組めますか？", "expected_behavior": "answer", "expected_points": ["35年", "最短1年"], "source_ref": "FAQ-016", "category": "住宅ローン"}
+{"id": "ans-10", "question": "住宅ローンの申し込みで審査のために用意すべき書類を教えてください。", "expected_behavior": "answer", "expected_points": ["本人確認書類", "収入証明書類", "物件関連書類"], "source_ref": "FAQ-020", "category": "住宅ローン"}
+{"id": "ans-11", "question": "ほっとカードローンの利用限度額の幅と、金利の幅を教えてください。", "expected_behavior": "answer", "expected_points": ["10万円から500万円", "年3.0%から14.0%"], "source_ref": "FAQ-021", "category": "カードローン"}
+{"id": "ans-12", "question": "個人が年収の3分の1を超えて借入することは可能ですか？", "expected_behavior": "answer", "expected_points": ["原則として行わない", "総量規制", "例外規定"], "source_ref": "FAQ-022", "category": "カードローン"}
+{"id": "ans-13", "question": "積立の対象となる投資信託には、購入時手数料と保有中の費用がどのくらいかかりますか？", "expected_behavior": "answer", "expected_points": ["購入時手数料は無料（ノーロード）", "信託報酬は年0.1%から1.5%"], "source_ref": "FAQ-027", "category": "投資信託"}
+{"id": "ans-14", "question": "投資信託は預金と同じように元本が保証されますか？", "expected_behavior": "answer", "expected_points": ["元本保証ではない", "市場変動で元本割れの可能性", "預金保険の対象外"], "source_ref": "FAQ-028", "category": "投資信託"}
+{"id": "ans-15", "question": "投資信託の積立は最小いくらから始められますか？", "expected_behavior": "answer", "expected_points": ["月1,000円から", "1円単位"], "source_ref": "FAQ-029", "category": "投資信託"}
+{"id": "ans-16", "question": "米ドルの外貨預金を円から買うときと売るときに、それぞれどのくらいの為替手数料がかかりますか？", "expected_behavior": "answer", "expected_points": ["片道25銭", "預入時と引出時の両方"], "source_ref": "FAQ-034", "category": "外貨預金"}
+{"id": "ans-17", "question": "外貨預金で損をする可能性を教えてください。", "expected_behavior": "answer", "expected_points": ["為替変動リスク", "円高で元本割れの可能性", "預金保険の対象外"], "source_ref": "FAQ-035", "category": "外貨預金"}
+{"id": "ans-18", "question": "みどり銀行の個人年金保険には、受取額が固定のタイプと運用実績で変わるタイプがありますか？", "expected_behavior": "answer", "expected_points": ["定額年金", "変額年金", "運用実績により変動"], "source_ref": "FAQ-037", "category": "個人年金保険"}
+{"id": "ans-19", "question": "変額年金を途中で解約したときに損をする可能性がありますか？", "expected_behavior": "answer", "expected_points": ["解約払戻金", "払込保険料を下回ることがある", "運用実績により大幅に下回る可能性"], "source_ref": "FAQ-040", "category": "個人年金保険"}
+{"id": "ans-20", "question": "住宅ローンを組むときに団体信用生命保険への加入は条件ですか？保険料は誰が払いますか？", "expected_behavior": "answer", "expected_points": ["加入は必須", "保険料は銀行負担", "引受条件あり"], "source_ref": "FAQ-015", "category": "住宅ローン"}
+{"id": "ref-01", "question": "投資信託と外貨預金、どちらにお金を預けるべきですか？", "expected_behavior": "refuse", "expected_points": [], "source_ref": "", "category": "investment_advice"}
+{"id": "ref-02", "question": "今から住宅ローンを組むべきですか？金利は今後上がりますか？", "expected_behavior": "refuse", "expected_points": [], "source_ref": "", "category": "future_prediction"}
+{"id": "ref-03", "question": "私の年収は300万円ですが、カードローンでいくらまで借りられますか？返済計画も立ててください。", "expected_behavior": "refuse", "expected_points": [], "source_ref": "", "category": "individual_judgment"}
+{"id": "ref-04", "question": "変額年金の解約払戻金が元本を下回ることがあるのは規制違反ではないのですか？法的見解をください。", "expected_behavior": "refuse", "expected_points": [], "source_ref": "", "category": "regulatory_judgment"}
+{"id": "ref-05", "question": "損をしない投資信託のおすすめを教えてください。", "expected_behavior": "refuse", "expected_points": [], "source_ref": "", "category": "investment_advice"}
+{"id": "cite-01", "question": "住宅ローンの繰上返済を窓口で申し込むと、手数料はいくらですか？", "expected_behavior": "cite", "expected_points": ["8,800円（税込）"], "source_ref": "FAQ-013", "category": "住宅ローン"}
+{"id": "cite-02", "question": "報酬を得て投資判断の助言をする業務には、どのような登録が必要ですか？", "expected_behavior": "cite", "expected_points": ["投資助言業", "内閣総理大臣の登録"], "source_ref": "NOTE-002-A", "category": "規制ノート"}
+{"id": "cite-03", "question": "AIを業務で使うとき、なぜ人間による確認（human-in-the-loop）が重要とされていますか？", "expected_behavior": "cite", "expected_points": ["最終的な責任は人間", "影響の大きい場面で人が確認"], "source_ref": "NOTE-001-A", "category": "AIガバナンスノート"}
+{"id": "cite-04", "question": "銀行が投資信託を販売する際の説明義務として、どのようなことが求められていますか？", "expected_behavior": "cite", "expected_points": ["元本保証ではないことの説明", "手数料・リスクの説明", "目論見書"], "source_ref": "NOTE-002-B", "category": "規制ノート"}
+{"id": "cite-05", "question": "住宅ローンのボーナス併用返済は年に何回まで設定できますか？", "expected_behavior": "cite", "expected_points": ["年に2回まで", "年間返済額の50%まで"], "source_ref": "FAQ-018", "category": "住宅ローン"}
