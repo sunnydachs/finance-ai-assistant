@@ -39,3 +39,6 @@ logs/
 *.log
 .tmp/
 .cache/
+
+# Private review notes (local only)
+REVIEW.md
