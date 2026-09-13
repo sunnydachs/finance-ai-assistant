@@ -234,6 +234,17 @@ logged per call to `logs/usage.jsonl`; swapping to paid Claude models is a
 - **Free-tier models** vary in availability and instruction-following; the
   judge retries once on unparseable output and parse failures are counted in
   reports rather than hidden.
+- **Run-to-run variance — read the regression tables with this in mind.**
+  One intermediate run (`report_20260913T173630Z`) was partially degraded by
+  upstream 429 rate-limiting: four items returned provider-error strings, so
+  the final report's diff table shows "1 → 5" and "False → True" recoveries
+  that reflect retry resilience, not a model-quality jump. The honest
+  before/after comparison is `baseline` (4.80, ans-10 = 1/5) vs the final
+  clean run (5.00, ans-10 = 5/5) — the retrieval fix, not the rate-limit
+  recovery, is the improvement claim. All runs including the degraded one
+  are kept in `evals/runs/` (nothing was cherry-picked), and averaging over
+  repeated runs per configuration would be the more rigorous protocol —
+  listed in Future improvements.
 - **Fictional data**: no claim is made about real-world product accuracy —
   the *pipeline* is the deliverable.
 
@@ -244,7 +255,9 @@ logged per call to `logs/usage.jsonl`; swapping to paid Claude models is a
 2. Judge calibration: 50-item human-labeled sample → judge–human agreement
    (Cohen's κ) before treating judge scores as ground truth.
 3. Conversation memory + multi-turn tool flows.
-4. Batch API for eval runs to cut wall-clock time.
+4. Batch API for eval runs to cut wall-clock time, plus averaging over
+   repeated runs per configuration to quantify run-to-run variance (single
+   runs on stochastic free-tier models are noisy — see Limitations).
 5. CI job running the eval on a schedule to catch model drift.
 
 ## Project layout
