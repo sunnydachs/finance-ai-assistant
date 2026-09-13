@@ -104,11 +104,14 @@ product.
 
 **Search: character n-gram BM25, zero dependencies.** Japanese has no spaces,
 so word retrieval requires a morphological analyzer (MeCab/janome). Instead we
-index lowercased character 2/3-grams plus whole ASCII tokens (ATM, NISA). It
-is boring, dependency-free, and — measured by the cite category of the eval —
-good enough on a ~45-document corpus. Embeddings get added only if the eval
-shows retrieval failures. (`corpus.py` already supports section-chunked notes;
-the change is measured, not assumed — see the eval reports.)
+index lowercased character 2/3-grams plus whole ASCII tokens (ATM, NISA), with
+politeness boilerplate (教えてください, ですか, …) stripped from both queries and
+documents — boilerplate carries no topical signal and demonstrably biased
+ranking (see the ans-10 story below). It is boring, dependency-free, and —
+measured by the cite category of the eval — good enough on a ~45-document
+corpus. Embeddings get added only if the eval shows retrieval failures.
+(`corpus.py` supports section-chunked notes; the change was measured and
+*not* adopted at this scale — see the eval reports.)
 
 **Deterministic refusal for restricted topics.** A refusal that needs an LLM
 to verify it is not a guarantee, so Layer 1 is a regex classifier: if the
@@ -142,14 +145,34 @@ and diffed against the previous run in a Markdown report
 (`evals/reports/`). The iteration protocol is: change one thing → run →
 compare → analyze → record in DECISIONS.md.
 
-**What the loop caught in practice:** the first full run flagged a refusal
-failure on `ref-03` (a personal-repayment-planning question phrased with
-"返済計画も立ててください"). The regex pattern only matched the stricter
-"返済計画を立てて" — the eval caught what manual spot-checks had not. After
-narrowing the pattern to stem forms (`返済計画.{0,2}立て`) and widening the
-pronoun anchor, the same item passed. This is the project's working
-definition of "it works": **stated behavior, checked automatically, with the
-history of what changed kept in reports and DECISIONS.md.**
+**What the loop caught in practice** — three findings from the first three
+runs, each fixed or decided *through measurement*:
+
+1. **A guardrail gap (ref-03).** The first full run flagged a refusal
+   failure: the personal-repayment-planning question was phrased "返済計画**も**
+   立ててください", which the regex (written for "返済計画**を**立てて") did not
+   match. The unit tests then caught the same wording, the pattern was
+   narrowed to a stem form (`返済計画.{0,2}立て`), and the item passed on
+   re-run.
+2. **A retrieval miss (ans-10).** The baseline scored ans-10 ("what
+   documents do I need for a mortgage review?") 1/5: the right FAQ (020)
+   ranked 10th and the app answered "not in the corpus". Per-term analysis
+   showed *politeness boilerplate ngrams* (教えてください, ですか, …) inflating
+   documents whose embedded FAQ question ends with 教えてください, drowning the
+   discriminative terms (審査, 書類). Stripping politeness boilerplate and
+   punctuation from both queries and documents lifted retrieval hits on the
+   golden set from 24/25 to 25/25, and ans-10 from 1/5 to 5/5 in the
+   end-to-end run. A BM25F-style question-field weight was *also* tried for
+   this failure and dropped: it added nothing once stripping was in place.
+3. **A measured non-improvement (notes chunking).** Splitting the guideline
+   notes into section chunks (a standard RAG instinct) changed nothing at
+   ~45-document scale: identical scores on all three categories. Chunking
+   stays *off* by default, recorded as "revisit when the corpus grows" —
+   complexity only earns its keep when the eval moves.
+
+This is the project's working definition of "it works": **stated behavior,
+checked automatically, with the history of what changed kept in reports and
+DECISIONS.md.**
 
 On human review: production eval practice layers automated metrics,
 LLM-as-judge, and stratified human review. This project implements the first
@@ -159,7 +182,30 @@ constitute a review program.
 
 ### Results
 
-<!-- RESULTS_TABLE -->
+Golden set = 30 questions (20 answer / 5 refuse / 5 cite). "retrieval hits"
+is an offline check that each non-refuse item's expected source ranks in the
+top-4 (25 items applicable).
+
+| run (all on 2026-09-13) | change under test | answer mean (1–5) | refuse pass | cite pass | retrieval hits |
+|---|---|---|---|---|---|
+| `baseline` | — | 4.80 | 100% (5/5) | 100% (5/5) | 24/25 (`ans-10` miss) |
+| `chunked-notes` | notes split into section chunks | 4.80 | 100% (5/5) | 100% (5/5) | 24/25 (unchanged) |
+| `boilerplate-strip` | politeness boilerplate stripped from query+docs | **5.00** | **100% (5/5)** | **100% (5/5)** | **25/25** |
+
+- Reports: `evals/reports/report_20260913T170214Z.md` (baseline),
+  `report_20260913T172230Z.md` (chunking), `report_20260913T175536Z.md`
+  (final). Raw records with per-item answers, citations, retrieval scores,
+  judge reasons and config fingerprints: `evals/runs/`.
+- Per-item judge scores, 20/20 = 5.0 in the final run; zero judge parse
+  failures.
+- API spend across all runs and development: **$0.00** (free-tier gateway
+  models; token usage logged per call in `logs/usage.jsonl`).
+
+Reproduce:
+
+```bash
+python evals/run_eval.py --tag my-run   # diff appears against the latest saved run
+```
 
 ## Cost
 

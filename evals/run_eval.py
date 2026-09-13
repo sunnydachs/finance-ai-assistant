@@ -21,9 +21,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from evals import judge, rules  # noqa: E402
 from src import config  # noqa: E402
-from src.agent import get_assistant  # noqa: E402
+from src.agent import AgentResult, get_assistant  # noqa: E402
 
 CALL_PACE_SECONDS = 3.2  # stay under free-tier 20 req/min
+ANSWER_RETRIES = 3       # free-tier providers throttle transiently; retry with backoff
+ANSWER_BACKOFF_SECONDS = (30.0, 60.0, 90.0)
+
+
+def _answer_with_retry(assistant, question: str) -> "AgentResult":
+    last_error: Exception | None = None
+    for attempt, backoff in enumerate((0.0,) + ANSWER_BACKOFF_SECONDS):
+        if backoff:
+            print(f"    retrying after {backoff:.0f}s ({last_error})", flush=True)
+            time.sleep(backoff)
+        try:
+            return assistant.answer_question(question)
+        except Exception as e:
+            last_error = e
+    raise last_error  # type: ignore[misc]
 
 
 def load_golden() -> list[dict]:
@@ -70,8 +85,8 @@ def run_answers(golden: list[dict], throttle: bool) -> list[dict]:
     records = []
     for i, item in enumerate(golden):
         try:
-            result = assistant.answer_question(item["question"])
-        except Exception as e:  # keep the run alive on a flaky item
+            result = _answer_with_retry(assistant, item["question"])
+        except Exception as e:  # keep the run alive on a persistently failing item
             print(f"  [{i + 1}/{len(golden)}] {item['id']}: ERROR {e}", flush=True)
             records.append(
                 {
@@ -222,7 +237,10 @@ def write_report(
     lines.append("## Regression vs previous run")
     lines.append("")
     if not diffs:
-        lines.append("_No comparison (first run) or no changes._")
+        lines.append(
+            "_No changes vs previous run._" if prev_records else
+            "_No comparison (first run)._"
+        )
     else:
         lines.append("| item | before | after |")
         lines.append("|---|---|---|")
