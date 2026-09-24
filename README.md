@@ -198,6 +198,13 @@ top-4 (25 items applicable).
   judge reasons and config fingerprints: `evals/runs/`.
 - Per-item judge scores, 20/20 = 5.0 in the final run; zero judge parse
   failures.
+- Retrieval quality, measured offline over the 25 golden items that carry a
+  ground-truth source (`evals/retrieval_eval.py`, report:
+  `evals/reports/retrieval_metrics.md`): **MRR 0.90, recall@5 100%,
+  precision@1 84%** — and precision decays to 10% at k=10, the
+  recall-vs-distractor tradeoff that keeps top-k at 4. Note refs (e.g.
+  `NOTE-002-A`) are credited when their parent note ranks, which matches
+  whole-file note indexing.
 - API spend across all runs and development: **$0.00** (free-tier gateway
   models; token usage logged per call in `logs/usage.jsonl`).
 
@@ -282,7 +289,7 @@ tests) live in [AGENTS.md](AGENTS.md).
 ```text
 src/        app code (agent, retrieval, guardrails, tool, llm wrapper, config)
 corpus/     faq.jsonl (40 items) + notes/ (own-words guideline summaries)
-evals/      golden.jsonl (30), judge, rule checks, run_eval.py, runs/, reports/
+evals/      golden.jsonl (30), judge, rule checks, run_eval.py, retrieval metrics, runs/, reports/
 tests/      offline unit tests (26) — retrieval, guardrails, tool, eval rules
 docs/       raw-vs-RAG comparison notes, demo script + captures, demo videos
 .github/    CI (pytest matrix), CodeQL, gitleaks, dependabot, stale bot
@@ -292,5 +299,10 @@ AGENTS.md   hard rules for AI agents working in this repo
 
 ## Demo video
 
-The 5-minute English walkthrough script is in
-[docs/demo_script.md](docs/demo_script.md) (video link to be added).
+- **docs/demo_video_ja.mp4** — 3m12s Japanese demo (VOICEVOX narration), produced
+  in the original review session.
+- **docs/demo_video_ja_short.mp4** — 1m25s Japanese demo (VOICEVOX narration,
+  1280×720), rebuilt with clean frame layouts.
+
+The English 5-minute walkthrough script is in
+[docs/demo_script.md](docs/demo_script.md).
