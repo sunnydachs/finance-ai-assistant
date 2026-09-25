@@ -217,7 +217,7 @@ def build() -> Path:
                 padded = padded_dir / wav.name
                 subprocess.run(
                     ["ffmpeg", "-y", "-v", "error", "-i", str(wav),
-                     "-af", f"apad=pad_dur=0.6", "-ar", "44100",
+                     "-af", "apad=pad_dur=0.6", "-ar", "44100",
                      str(padded)],
                     capture_output=True, check=True,
                 )
