@@ -259,6 +259,24 @@ def check() -> bool:
         ok = False
     if v and (v.get("width"), v.get("height")) != (1280, 720):
         ok = False
+    # Duration gate: a stale 3m12s file with the right codecs must not pass.
+    # The README documents ~38s; accept 30–60s as the target band.
+    dur_s = None
+    try:
+        dur_s = float(
+            subprocess.run(
+                ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                 "-of", "csv=p=0", str(OUT_MP4)],
+                capture_output=True, text=True, check=True,
+            ).stdout.strip()
+        )
+    except (subprocess.CalledProcessError, ValueError):
+        pass
+    if dur_s is None or not (30.0 <= dur_s <= 60.0):
+        print(f"duration: {dur_s}s OUTSIDE 30-60s target band")
+        ok = False
+    else:
+        print(f"duration: {dur_s:.1f}s (in band)")
     return ok
 
 
