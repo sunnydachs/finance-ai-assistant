@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import re
 
+MAX_INPUT_CHARS = 8_000
 CATEGORY_DESCRIPTIONS = {
     "investment_advice": "個別の商品選択・売買など投資助言にあたる質問",
     "future_prediction": "金利・為替などの将来予測を求める質問",
@@ -95,7 +96,14 @@ _REFUSAL_TEMPLATE = (
 
 
 def classify(question: str) -> str | None:
-    """Return the first restricted category the question matches, else None."""
+    """Return the first restricted category the question matches, else None.
+
+    Inputs are capped at MAX_INPUT_CHARS before matching: an unbounded text
+    is a regular-expression DoS vector and adds no semantic value anyway.
+    """
+    if len(question) > MAX_INPUT_CHARS:
+        return None  # unprocessable; caller will answer "資料に記載がありません"
+    question = question[:MAX_INPUT_CHARS]
     for category, patterns in _PATTERNS.items():
         for pattern in patterns:
             if pattern.search(question):
@@ -110,7 +118,13 @@ def refusal_message(category: str) -> str:
 
 
 def contains_advice_phrases(text: str) -> bool:
-    """Layer 3: does an answer body contain advice-like language?"""
+    """Layer 3: does an answer body contain advice-like language?
+
+    Overlong input is skipped (returns False) so the caller can log and
+    route the output separately instead of spending time on regex matching.
+    """
+    if len(text) > MAX_INPUT_CHARS:
+        return False
     return any(p.search(text) for p in _ADVICE_PHRASES)
 
 

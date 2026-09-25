@@ -27,6 +27,12 @@ from .corpus import Doc
 _K1 = 1.5
 _B = 0.75
 
+# Retrieved documents are untrusted content. Mark the boundary explicitly
+# so a crafted doc cannot smuggle executable instructions into the system
+# prompt (OWASP LLM01. See the 2026-09-25 parallel audit).
+UNTRUSTED_OPEN = "<UNTRUSTED_CONTENT_BEGIN>"
+UNTRUSTED_CLOSE = "<UNTRUSTED_CONTENT_END>"
+
 _ascii_word_re = re.compile(r"[A-Za-z0-9%]+")
 # Politeness boilerplate and punctuation: no topical signal. Longest forms
 # first so 教えてください is not partially stripped to ください.
@@ -103,7 +109,13 @@ class RetrievedDoc:
 
 def format_context(retrieved: list[tuple[Doc, float]]) -> str:
     """Render retrieved docs for the prompt, with citation ids the model must
-    repeat in its answer."""
+    repeat in its answer.
+
+    Retrieved text is untrusted input: it is wrapped in explicit
+    boundary markers so prompt-injection text inside the corpus cannot
+    masquerade as a system instruction (OWASP LLM01 — indirect prompt
+    injection. See the 2026-09-25 parallel audit).
+    """
     parts = []
     for doc, _score in retrieved:
         parts.append(f"[{doc.display_id()}] ({doc.title})\n{doc.text}")
