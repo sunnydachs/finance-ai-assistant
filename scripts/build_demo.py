@@ -5,6 +5,10 @@ the VOICEVOX server: narration text drives frame timing (audio-first, the
 #1 A/V sync rule); frame reveal is a clean typing effect; the final mux
 never calls a model/server.
 
+Setup:
+    pip install -e ".[demo]"        # Pillow (VOICEVOX server + ffmpeg are system tools)
+    VOICEVOX: ~/.voicevox/squashfs-root/vv-engine/run --host 127.0.0.1 --port 50021
+
 Usage:
     .venv/bin/python scripts/build_demo.py            # build docs/demo_video_ja.mp4
     .venv/bin/python scripts/build_demo.py --check    # verify an existing build
@@ -32,16 +36,16 @@ FONT_PATH = "/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf"
 W, H = 1280, 720
 FPS = 30
 
-# (scene_id, narration, [(role, text), ...]) — role colors the line.
-# Narration is spoken; text is what the frame shows (the demo's real stdout).
-SCENES: list[tuple[str, str, list[tuple[str, str]]]] = [
-    ("hook", "これは架空の日本の銀行の質問応答アシスタントです。検索、計算ツール、ガードレール、そして動作を証明する評価セットを備えた、誠実なLLMエンジニアリングの実演です。", [
-        ("title", "finance-ai-assistant — 架空銀行FAQアシスタント"),
+# (scene_id, narration, title, [(role, text), ...]) — role colors the line.
+# Narration is spoken; title is the frame heading (short — the title area
+# does not wrap); text is what the frame shows (the demo's real stdout).
+SCENES: list[tuple[str, str, str, list[tuple[str, str]]]] = [
+    ("hook", "これは架空の日本の銀行の質問応答アシスタントです。検索、計算ツール、ガードレール、そして動作を証明する評価セットを備えた、誠実なLLMエンジニアリングの実演です。", "finance-ai-assistant — 架空銀行FAQアシスタント", [
         ("cmd", "$ python main.py \"質問\""),
         ("answer", "  -> 出典付きの回答 [FAQ-013]"),
         ("note", "RAG + tool + guardrails + eval suite"),
     ]),
-    ("rag", "まず通常の質問です。回答は資料に基づき、出典が付きます。検索結果も見てみましょう。", [
+    ("rag", "まず通常の質問です。回答は資料に基づき、出典が付きます。検索結果も見てみましょう。", "Demo 1 — RAG回答と検索結果", [
         ("cmd", "$ python main.py \"住宅ローンの繰上返済の手数料を教えてください。店頭で申し込む場合も。\" --show-context"),
         ("context", "検索: [FAQ-013] ほっと住宅ローン : 83.235"),
         ("context", "      [FAQ-014] ほっと住宅ローン : 23.184"),
@@ -53,20 +57,20 @@ SCENES: list[tuple[str, str, list[tuple[str, str]]]] = [
         ("answer", "UNTRUSTED_CONTENT_END"),
         ("note", "検索文書は untrusted マーカーで分離（OWASP LLM01対策）"),
     ]),
-    ("tool", "計算が必要な質問では、ツールを使って正確に計算します。", [
+    ("tool", "計算が必要な質問では、ツールを使って正確に計算します。", "Demo 2 — ツール実行", [
         ("cmd", "$ python main.py \"3000万円を年利2.1%で35年間借りた場合、月々の返済額はいくらですか？\""),
         ("tool_use", "ツール実行: calculate_monthly_payment(principal=30000000, rate=0.021, years=35)"),
         ("answer", "月々の返済額は 100,925円 です。"),
         ("cite", "[FAQ-011] [FAQ-012]"),
         ("note", "ツール入力は検証済み（非有限数・bool・小数年を拒否）"),
     ]),
-    ("guardrail", "投資助言にあたる質問は、LLMを呼ばずに決定的に拒否します。", [
+    ("guardrail", "投資助言にあたる質問は、LLMを呼ばずに決定的に拒否します。", "Demo 3 — ガードレール", [
         ("cmd", "$ python main.py \"おすすめの投資信託を教えてください\""),
         ("warning", "申し訳ありませんが、この質問にはお答えできません。"),
         ("warning", "「個別の商品選択・売買など投資助言にあたる質問」にあたるためです。"),
         ("note", "ガードレール作動 (investment_advice): LLM呼び出しなし"),
     ]),
-    ("eval", "最後に評価です。コーパスと質問を固定し、変更の劣化を検出する回帰評価です。", [
+    ("eval", "最後に評価です。コーパスと質問を固定し、変更の劣化を検出する回帰評価です。", "Eval — 回帰評価", [
         ("cmd", "$ python -m evals.run_eval"),
         ("answer", "retrieval MRR 0.903 / recall@5 100% / precision@1 84%"),
         ("answer", "answer 5.0 / refuse 100% / cite 100%"),
@@ -165,7 +169,7 @@ def build() -> Path:
 
         # 1. Synthesize narration; audio-first timing.
         clips = []
-        for sid, narration, lines in SCENES:
+        for sid, narration, _title, lines in SCENES:
             wav, dur = synth_clip(narration, cache_dir)
             clips.append((sid, narration, lines, wav, dur + 0.6))  # post_pad 0.6s
             print(f"scene {sid}: {dur:.1f}s narration")
@@ -178,11 +182,8 @@ def build() -> Path:
         t = 0.0
         for sid, narration, lines, wav, dur in clips:
             n_frames = max(1, int(round(dur * FPS)))
-            title = dict((s[0], s[1]) for s in SCENES)[sid] if False else next(
-                s[1] for s in SCENES if s[0] == sid
-            )
+            title = next(s[2] for s in SCENES if s[0] == sid)
             total_chars = sum(len(t2) for _, t2 in lines)
-            char_budget = 0
             for i in range(n_frames):
                 progress = (i + 1) / n_frames
                 target = int(progress * total_chars)
@@ -193,8 +194,9 @@ def build() -> Path:
                     take = min(len(text), target - consumed)
                     visible.append((role, text[:take]))
                     consumed += take
-                while len(visible) < min(3, len(lines)):
-                    visible.append(lines[len(visible)])
+                # Unrevealed lines stay hidden (no fill loop): revealing
+                # later lines before the typing reaches them breaks the
+                # effect's ordering promise.
                 frame = render_frame(visible, title)
                 frame.save(frames_dir / f"f{n_total:05d}.png")
                 n_total += 1
@@ -202,11 +204,24 @@ def build() -> Path:
             t += dur
         print(f"rendered {n_total} frames")
 
-        # 3. Concatenate audio; mux with full color-tag set (Safari/QuickTime safe).
+        # 3. Concatenate audio with the same scene durations the frames use:
+        # pad each clip with 0.6s of silence (post_pad) before concat —
+        # ffmpeg concatenates without gaps, so an unpadded concat makes
+        # audio drift 0.6s earlier per scene and -shortest then truncates
+        # the final scene's tail.
         concat_list = tmp / "wav_list.txt"
+        padded_dir = tmp / "padded"
+        padded_dir.mkdir()
         with concat_list.open("w") as f:
             for _, dur, wav in timeline:
-                f.write(f"file '{wav}'\n")
+                padded = padded_dir / wav.name
+                subprocess.run(
+                    ["ffmpeg", "-y", "-v", "error", "-i", str(wav),
+                     "-af", f"apad=pad_dur=0.6", "-ar", "44100",
+                     str(padded)],
+                    capture_output=True, check=True,
+                )
+                f.write(f"file '{padded}'\n")
         wav_out = tmp / "narration.wav"
         subprocess.run(
             ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_list),
