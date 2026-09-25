@@ -6,6 +6,7 @@ the agent calls it when the model emits a tool_use block.
 from __future__ import annotations
 
 import json
+import math
 
 
 def calculate_monthly_payment(principal: float, annual_rate: float, years: int) -> int:
@@ -53,16 +54,30 @@ def execute_tool(name: str, raw_input: str) -> dict:
 
     Errors are returned to the model as a JSON error object so the agent loop
     can recover instead of crashing the request.
+
+    Tool inputs come from the model, so they are validated before use:
+    floats must be finite (JSON accepts NaN/Infinity, which would produce a
+    silently wrong payment) and years must be an integer — a fractional-term
+    loan is silently wrong, not roughly right. OverflowError from float()
+    on huge strings is a valid rejection, not a crash vector.
     """
     if name != TOOL_SCHEMA["name"]:
         return {"error": f"unknown tool: {name}"}
     try:
         args = json.loads(raw_input)
-        payment = calculate_monthly_payment(
-            principal=float(args["principal"]),
-            annual_rate=float(args["annual_rate"]),
-            years=int(args["years"]),
-        )
+        # JSON-level type check before float()/int() coercion — otherwise
+        # true/false becomes 1.0/0.0 and a booleans-as-numbers bug is
+        # invisible to the caller.
+        if type(args["principal"]) is bool or type(args["annual_rate"]) is bool \
+                or type(args["years"]) is bool:
+            raise TypeError("boolean input is not a number")
+        p, r = float(args["principal"]), float(args["annual_rate"])
+        y_raw = float(args["years"])
+        if not (math.isfinite(p) and math.isfinite(r) and math.isfinite(y_raw)):
+            raise ValueError("non-finite numeric input")
+        if not y_raw.is_integer():
+            raise ValueError("years must be an integer")
+        payment = calculate_monthly_payment(principal=p, annual_rate=r, years=int(y_raw))
         return {"monthly_payment_yen": payment}
-    except (KeyError, ValueError, TypeError, json.JSONDecodeError) as e:
+    except (OverflowError, KeyError, ValueError, TypeError, json.JSONDecodeError) as e:
         return {"error": f"{type(e).__name__}: {e}"}
