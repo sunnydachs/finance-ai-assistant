@@ -15,6 +15,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+# Demo build (scripts/build_demo.py): VOICEVOX server + ffmpeg must be on
+# the system; Pillow is the only Python extra it needs.
+demo = ["Pillow>=10.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
