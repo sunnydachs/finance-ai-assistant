@@ -136,7 +136,9 @@ def evaluate(records: list[dict], throttle: bool) -> list[dict]:
             passed, reason = rules.check_refuse(rec["answer"])
             rec.update({"rule_pass": passed, "rule_reason": reason, "judge": None})
         elif behavior == "cite":
-            retrieved_ids = [d["id"] for d in rec.get("retrieved", [])] or None
+            # An empty retrieved list is kept as [] (not None): with no docs
+            # retrieved, every citation in the answer is ungrounded by definition.
+            retrieved_ids = [d["id"] for d in rec.get("retrieved", [])]
             passed, reason, _found = rules.check_cite(rec["answer"], rec["source_ref"], retrieved_ids)
             rec.update({"rule_pass": passed, "rule_reason": reason, "judge": None})
         else:  # answer
@@ -158,7 +160,7 @@ def score_run(records: list[dict]) -> dict:
     # not a model-quality reading. Count them separately and exclude them
     # from the judge-score mean so "provider was down" is never smuggled
     # into "model was worse".
-    run_errors = sum(1 for r in answer_records if r.get("run_error"))
+    run_errors = sum(1 for r in records if r.get("run_error"))
     judge_calls_failed = sum(
         1 for r in answer_records if not r.get("run_error") and r.get("judge") is None
     )
@@ -170,8 +172,10 @@ def score_run(records: list[dict]) -> dict:
         1 for r in answer_records
         if not r.get("run_error") and r.get("judge") and not r["judge"]["parse_ok"]
     )
-    refuse = [r for r in records if r["expected_behavior"] == "refuse"]
-    cite = [r for r in records if r["expected_behavior"] == "cite"]
+    refuse = [r for r in records
+              if r["expected_behavior"] == "refuse" and not r.get("run_error")]
+    cite = [r for r in records
+            if r["expected_behavior"] == "cite" and not r.get("run_error")]
     return {
         "answer_expected_n": len(answer_records),
         "answer_run_errors": run_errors,
@@ -246,6 +250,9 @@ def write_report(
     lines.append("| metric | value |")
     lines.append("|---|---|")
     lines.append(f"| answer mean (1–5) | {summary['answer_mean']} (n={summary['answer_n_scored']}) |")
+    lines.append(f"| answer expected | {summary.get('answer_expected_n', summary['answer_n_scored'])} |")
+    lines.append(f"| answer run errors (items that never ran) | {summary.get('answer_run_errors', 0)} |")
+    lines.append(f"| judge call failures (not in mean) | {summary.get('judge_call_errors', 0)} |")
     lines.append(f"| answer % scoring ≥4 | {summary['answer_pct_at_least_4']}% |")
     lines.append(f"| refuse pass rate (rule) | {summary['refuse_pass_rate']}% |")
     lines.append(f"| cite pass rate (rule) | {summary['cite_pass_rate']}% |")
@@ -325,7 +332,9 @@ def main(argv: list[str] | None = None) -> int:
         # the model never saw, and the combined run is silently invalid.
         current_snap = config_snapshot()
         prev_snap = prev.get("config", {})
-        if prev_snap and prev_snap != current_snap:
+        # A missing snapshot cannot be proven compatible — reject it rather
+        # than silently treating it as equal to the current config.
+        if prev_snap != current_snap:
             raise SystemExit(
                 f"config mismatch: {args.reuse_answers} was generated under "
                 f"{prev_snap}, current config is {current_snap}. "

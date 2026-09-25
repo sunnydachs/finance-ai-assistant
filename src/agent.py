@@ -69,6 +69,16 @@ class FinanceAssistant:
 
         # Layer 1: deterministic refusal — no LLM call at all.
         category = guardrails.classify(question)
+        if category == guardrails.OVERLONG:
+            return AgentResult(
+                question=question,
+                answer=(
+                    "申し訳ありませんが、この質問は長すぎるためお受けできません。"
+                    "質問は簡潔にお願いします。"
+                ),
+                refused=True,
+                guardrail_category="overlong_input",
+            )
         if category:
             return AgentResult(
                 question=question,
@@ -143,7 +153,18 @@ class FinanceAssistant:
             messages.append({"role": "assistant", "content": message.content})
             messages.append({"role": "user", "content": tool_results})
         else:
+            # Tool budget exhausted. Make one final call *without* tools so
+            # the model is forced to answer from the last tool result instead
+            # of emitting an empty text reply (the 4th call must not also be
+            # tool-enabled — that was the original off-by-one).
             logger.warning("tool loop exhausted MAX_TOOL_ROUNDS for: %s", question)
+            message = llm.call_model(
+                model=model,
+                system=system,
+                messages=messages,
+                purpose="app",
+                tools=None,
+            )
 
         _log_tool_calls(question, tool_calls_log)
         answer = llm.text_of(message).strip()

@@ -19,6 +19,7 @@ from __future__ import annotations
 import re
 
 MAX_INPUT_CHARS = 8_000
+OVERLONG = "overlong_input"  # sentinel: do not retrieve or answer with a regex-bomb question
 CATEGORY_DESCRIPTIONS = {
     "investment_advice": "個別の商品選択・売買など投資助言にあたる質問",
     "future_prediction": "金利・為替などの将来予測を求める質問",
@@ -99,10 +100,13 @@ def classify(question: str) -> str | None:
     """Return the first restricted category the question matches, else None.
 
     Inputs are capped at MAX_INPUT_CHARS before matching: an unbounded text
-    is a regular-expression DoS vector and adds no semantic value anyway.
+    is a regular-expression DoS vector. An overlong input returns the
+    sentinel OVERLONG so the caller can refuse without running retrieval or
+    the LLM (a regex-bomb question must not be answered with "資料に
+    記載がありません" as if it were merely out of scope).
     """
     if len(question) > MAX_INPUT_CHARS:
-        return None  # unprocessable; caller will answer "資料に記載がありません"
+        return OVERLONG
     question = question[:MAX_INPUT_CHARS]
     for category, patterns in _PATTERNS.items():
         for pattern in patterns:
@@ -120,11 +124,12 @@ def refusal_message(category: str) -> str:
 def contains_advice_phrases(text: str) -> bool:
     """Layer 3: does an answer body contain advice-like language?
 
-    Overlong input is skipped (returns False) so the caller can log and
-    route the output separately instead of spending time on regex matching.
+    Overlong input is treated as a positive match (True) so the caller
+    appends the escalation note: a regex-bomb answer must not bypass the
+    output guardrail.
     """
     if len(text) > MAX_INPUT_CHARS:
-        return False
+        return True  # force the escalation note; do not scan an unbounded text
     return any(p.search(text) for p in _ADVICE_PHRASES)
 
 

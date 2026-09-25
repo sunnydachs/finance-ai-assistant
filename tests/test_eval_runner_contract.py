@@ -78,11 +78,21 @@ def test_check_cite_accepts_expected_retrieved():
 
 
 def test_check_cite_rejects_unretrieved_citation():
+    """An answer citing both the retrieved (expected) and an unretrieved
+    source must fail: presence of the expected citation is not grounding."""
     passed, reason, found = rules.check_cite(
-        "…。[FAQ-099]", "FAQ-001", retrieved_ids=["FAQ-001"]
+        "…。[FAQ-001] と [FAQ-099]", "FAQ-001", retrieved_ids=["FAQ-001"]
     )
     assert not passed
-    assert "未検索の出典" in reason or "FAQ-099" in reason
+    assert "FAQ-099" in reason
+
+
+def test_check_cite_empty_retrieved_rejects_all_citations():
+    """With nothing retrieved, any citation is ungrounded by definition."""
+    passed, reason, found = rules.check_cite(
+        "…。[FAQ-001]", "FAQ-001", retrieved_ids=[]
+    )
+    assert not passed
 
 
 def test_check_cite_parent_note_counted_as_grounded():

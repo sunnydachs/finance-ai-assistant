@@ -25,9 +25,11 @@ from src.retrieval import (  # noqa: E402
 
 def test_guardrails_input_length_is_capped():
     long_text = "あ" * (guardrails.MAX_INPUT_CHARS + 1)
-    # Should not crash and should not process the unlimited text
-    assert guardrails.classify(long_text) is None
-    assert guardrails.contains_advice_phrases(long_text) is False  # skipped on overlong input
+    # Overlong input must be refused via the sentinel, not silently ignored.
+    assert guardrails.classify(long_text) == guardrails.OVERLONG
+    # Overlong output is treated as a positive reasoning hit so the caller
+    # appends the escalation note; it must not bypass the guardrail.
+    assert guardrails.contains_advice_phrases(long_text) is True  # forces escalation
 
 
 def test_guardrails_capped_input_still_classifies():
@@ -58,25 +60,35 @@ def test_format_context_produces_citable_output():
 
 
 def test_agent_prompt_wraps_retrieved_with_untrusted_markers():
-    """The trust boundary must appear in the system prompt between the
-    instructions and the retrieved corpus material. Verified by construction:
-    agent.py composes SYSTEM_PROMPT + UNTRUSTED_OPEN + format_context + CLOSE."""
-    fetched = []
-    # Reproduce how agent.py builds the prompt; if the composition ever
-    # changes, this test fails.
-    from src import agent
-    from src.retrieval import format_context
+    """Capture the actual system prompt passed to llm.call_model and assert
+    the retrieved doc lands between the untrusted markers."""
+    from unittest.mock import MagicMock, patch
 
-    doc = Doc("FAQ-999", "注意", "利子率", "faq")
-    rendered = agent.SYSTEM_PROMPT + "\n\n資料:\n" + UNTRUSTED_OPEN \
-        + "\n" + format_context([(doc, 1.0)]) + "\n" + UNTRUSTED_CLOSE
-    assert UNTRUSTED_OPEN in rendered and UNTRUSTED_CLOSE in rendered
-    assert "[FAQ-999]" in rendered
-    # Ensure the unmodified agent source actually does this composition
-    import inspect
-    src = inspect.getsource(agent.FinanceAssistant.answer_question)
-    assert "UNTRUSTED_OPEN" in src and "UNTRUSTED_CLOSE" in src
-    assert "format_context" in src
+    from src import agent as agent_mod
+    from src.corpus import Corpus
+    from src.retrieval import Doc
+
+    corpus = Corpus([Doc("FAQ-999", "注意", "利子率", "faq")])
+    assistant = agent_mod.FinanceAssistant(corpus)
+
+    captured = {}
+
+    def fake_call_model(*, model, system, messages, purpose, tools):
+        captured["system"] = system
+        response = MagicMock()
+        response.stop_reason = "end_turn"
+        response.content = []
+        return response
+
+    with patch.object(agent_mod.llm, "call_model", side_effect=fake_call_model), \
+         patch.object(agent_mod.llm, "text_of", return_value="テスト回答"):
+        assistant.answer_question("利子率を教えて")
+
+    sys_prompt = captured["system"]
+    i_open = sys_prompt.index(UNTRUSTED_OPEN)
+    i_close = sys_prompt.index(UNTRUSTED_CLOSE)
+    i_doc = sys_prompt.index("[FAQ-999]")
+    assert i_open < i_doc < i_close, "retrieved doc must sit between the markers"
 
 
 def test_tool_execute_rejects_non_finite():
