@@ -299,10 +299,11 @@ AGENTS.md   hard rules for AI agents working in this repo
 
 ## Demo video
 
-- **docs/demo_video_ja.mp4** — 3m12s Japanese demo (VOICEVOX narration), produced
-  in the original review session.
+- **docs/demo_video_ja.mp4** — ~38s Japanese demo (VOICEVOX narration, 1280×720),
+  rebuilt from the post-audit version (UNTRUSTED markers, guardrail wording).
+  Rebuild: `.venv/bin/python scripts/build_demo.py`.
 - **docs/demo_video_ja_short.mp4** — 1m25s Japanese demo (VOICEVOX narration,
-  1280×720), rebuilt with clean frame layouts.
+  1280×720), built in the original review session (pre-audit version).
 
 The English 5-minute walkthrough script is in
 [docs/demo_script.md](docs/demo_script.md).
