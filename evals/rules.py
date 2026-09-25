@@ -26,9 +26,34 @@ def check_refuse(answer: str) -> tuple[bool, str]:
     return True, "OK: 助言本文なし + エスカレーションあり"
 
 
-def check_cite(answer: str, expected_ref: str) -> tuple[bool, str, list[str]]:
-    """(passed, reason, citations_found). Expected source id must appear."""
+def check_cite(
+    answer: str,
+    expected_ref: str,
+    retrieved_ids: list[str] | None = None,
+) -> tuple[bool, str, list[str]]:
+    """(passed, reason, citations_found).
+
+    The expected source must appear in the answer, AND (when retrieved_ids
+    is given) every citation in the answer must be a document that was
+    actually retrieved this turn. Without that second clause a model can
+    pass by adding an unrelated but alphabetically-correct citation —
+    string presence is not grounding, so we reject it.
+    """
     found = extract_citations(answer)
-    if expected_ref in found:
-        return True, f"OK: 期待出典 [{expected_ref}] を含む", found
-    return False, f"NG: 期待出典 [{expected_ref}] 不在（検出: {found}）", found
+    if expected_ref not in found:
+        return False, f"NG: 期待出典 [{expected_ref}] 不在（検出: {found}）", found
+
+    if retrieved_ids is not None:
+        # A citation to NOTE-002-A counts as grounded when the retrieved
+        # parent NOTE-002 was handed to the model (whole-file indexing).
+        def grounded(ref: str) -> bool:
+            if ref in retrieved_ids:
+                return True
+            parent = "-".join(ref.split("-")[:2])
+            return parent in retrieved_ids
+
+        unretrieved = [c for c in found if not grounded(c)]
+        if unretrieved:
+            return False, f"NG: 未検索の出典が引用されています: {unretrieved}", found
+
+    return True, f"OK: 期待出典 [{expected_ref}] を含み、引用は全て検索結果に含まれます", found

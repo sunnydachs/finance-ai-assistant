@@ -136,7 +136,10 @@ def evaluate(records: list[dict], throttle: bool) -> list[dict]:
             passed, reason = rules.check_refuse(rec["answer"])
             rec.update({"rule_pass": passed, "rule_reason": reason, "judge": None})
         elif behavior == "cite":
-            passed, reason, _found = rules.check_cite(rec["answer"], rec["source_ref"])
+            # An empty retrieved list is kept as [] (not None): with no docs
+            # retrieved, every citation in the answer is ungrounded by definition.
+            retrieved_ids = [d["id"] for d in rec.get("retrieved", [])]
+            passed, reason, _found = rules.check_cite(rec["answer"], rec["source_ref"], retrieved_ids)
             rec.update({"rule_pass": passed, "rule_reason": reason, "judge": None})
         else:  # answer
             result = judge.judge_answer(
@@ -150,17 +153,33 @@ def evaluate(records: list[dict], throttle: bool) -> list[dict]:
 
 
 def score_run(records: list[dict]) -> dict:
+    answer_records = [
+        r for r in records if r["expected_behavior"] == "answer"
+    ]
+    # A provider failure (retry-exhausted rate limit etc.) is a run failure,
+    # not a model-quality reading. Count them separately and exclude them
+    # from the judge-score mean so "provider was down" is never smuggled
+    # into "model was worse".
+    run_errors = sum(1 for r in records if r.get("run_error"))
+    judge_calls_failed = sum(
+        1 for r in answer_records if not r.get("run_error") and r.get("judge") is None
+    )
     answer_scores = [
-        r["judge"]["score"] for r in records
-        if r["expected_behavior"] == "answer" and r["judge"] and r["judge"]["score"]
+        r["judge"]["score"] for r in answer_records
+        if not r.get("run_error") and r.get("judge") and r["judge"]["score"]
     ]
     answer_parse_failures = sum(
-        1 for r in records
-        if r["expected_behavior"] == "answer" and r["judge"] and not r["judge"]["parse_ok"]
+        1 for r in answer_records
+        if not r.get("run_error") and r.get("judge") and not r["judge"]["parse_ok"]
     )
-    refuse = [r for r in records if r["expected_behavior"] == "refuse"]
-    cite = [r for r in records if r["expected_behavior"] == "cite"]
+    refuse = [r for r in records
+              if r["expected_behavior"] == "refuse" and not r.get("run_error")]
+    cite = [r for r in records
+            if r["expected_behavior"] == "cite" and not r.get("run_error")]
     return {
+        "answer_expected_n": len(answer_records),
+        "answer_run_errors": run_errors,
+        "judge_call_errors": judge_calls_failed,
         "answer_mean": round(sum(answer_scores) / len(answer_scores), 3) if answer_scores else None,
         "answer_n_scored": len(answer_scores),
         "answer_pct_at_least_4": round(
@@ -207,7 +226,10 @@ def write_report(
     run_dir: Path, run_id: str, tag: str, summary: dict, records: list[dict],
     diffs: list[dict], prev_run_id: str | None, snapshot: dict,
 ) -> Path:
-    report_dir = config.EVAL_REPORTS_DIR
+    report_dir = run_dir.parent / "reports"
+    # run_dir is the runs/ directory passed by the caller, so the report
+    # always lands in the sibling reports/ directory — never derived from
+    # cwd, which would land reports in different places per call site.
     report_dir.mkdir(parents=True, exist_ok=True)
     path = report_dir / f"report_{run_id}.md"
 
@@ -228,6 +250,9 @@ def write_report(
     lines.append("| metric | value |")
     lines.append("|---|---|")
     lines.append(f"| answer mean (1–5) | {summary['answer_mean']} (n={summary['answer_n_scored']}) |")
+    lines.append(f"| answer expected | {summary.get('answer_expected_n', summary['answer_n_scored'])} |")
+    lines.append(f"| answer run errors (items that never ran) | {summary.get('answer_run_errors', 0)} |")
+    lines.append(f"| judge call failures (not in mean) | {summary.get('judge_call_errors', 0)} |")
     lines.append(f"| answer % scoring ≥4 | {summary['answer_pct_at_least_4']}% |")
     lines.append(f"| refuse pass rate (rule) | {summary['refuse_pass_rate']}% |")
     lines.append(f"| cite pass rate (rule) | {summary['cite_pass_rate']}% |")
@@ -238,8 +263,8 @@ def write_report(
     lines.append("")
     if not diffs:
         lines.append(
-            "_No changes vs previous run._" if prev_records else
-            "_No comparison (first run)._"
+            "_No changes vs previous run._" if prev_run_id
+            else "_No comparison (first run)._"
         )
     else:
         lines.append("| item | before | after |")
@@ -302,6 +327,20 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.reuse_answers:
         prev = json.loads(args.reuse_answers.read_text(encoding="utf-8"))
+        # A reused answer set must come from a run with the same config;
+        # otherwise the judge scores answers against a corpus/system prompt
+        # the model never saw, and the combined run is silently invalid.
+        current_snap = config_snapshot()
+        prev_snap = prev.get("config", {})
+        # A missing snapshot cannot be proven compatible — reject it rather
+        # than silently treating it as equal to the current config.
+        if prev_snap != current_snap:
+            raise SystemExit(
+                f"config mismatch: {args.reuse_answers} was generated under "
+                f"{prev_snap}, current config is {current_snap}. "
+                "Re-running with --reuse-answers across config changes "
+                "mixes two incompatible runs."
+            )
         prev_by_id = {r["id"]: r for r in prev["records"]}
         records = [dict(prev_by_id[item["id"]]) for item in golden]
         print("reusing answers from", args.reuse_answers)
